@@ -60,8 +60,38 @@
       "title": "灵石矿的秘密",
       "filename": "第十章_灵石矿的秘密.md",
       "path": "chapters/第十章_灵石矿的秘密.md"
+    },
+    {
+      "number": 11,
+      "title": "宗门大比预选",
+      "filename": "第十一章_宗门大比预选.md",
+      "path": "chapters/第十一章_宗门大比预选.md"
+    },
+    {
+      "number": 12,
+      "title": "神秘来客",
+      "filename": "第十二章_神秘来客.md",
+      "path": "chapters/第十二章_神秘来客.md"
+    },
+    {
+      "number": 13,
+      "title": "内门晋升",
+      "filename": "第十三章_内门晋升.md",
+      "path": "chapters/第十三章_内门晋升.md"
+    },
+    {
+      "number": 14,
+      "title": "古籍研读",
+      "filename": "第十四章_古籍研读.md",
+      "path": "chapters/第十四章_古籍研读.md"
+    },
+    {
+      "number": 15,
+      "title": "第一次危机",
+      "filename": "第十五章_第一次危机.md",
+      "path": "chapters/第十五章_第一次危机.md"
     }
   ],
-  "total": 10,
+  "total": 15,
   "last_updated": "/Users/liu/cat/小说"
 }
