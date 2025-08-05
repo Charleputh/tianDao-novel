@@ -1,0 +1,67 @@
+{
+  "success": true,
+  "chapters": [
+    {
+      "number": 1,
+      "title": "觉醒",
+      "filename": "第一章_觉醒.md",
+      "path": "chapters/第一章_觉醒.md"
+    },
+    {
+      "number": 2,
+      "title": "初试锋芒",
+      "filename": "第二章_初试锋芒.md",
+      "path": "chapters/第二章_初试锋芒.md"
+    },
+    {
+      "number": 3,
+      "title": "青云宗",
+      "filename": "第三章_青云宗.md",
+      "path": "chapters/第三章_青云宗.md"
+    },
+    {
+      "number": 4,
+      "title": "宗门生活",
+      "filename": "第四章_宗门生活.md",
+      "path": "chapters/第四章_宗门生活.md"
+    },
+    {
+      "number": 5,
+      "title": "宗主召见",
+      "filename": "第五章_宗主召见.md",
+      "path": "chapters/第五章_宗主召见.md"
+    },
+    {
+      "number": 6,
+      "title": "师兄师姐",
+      "filename": "第六章_师兄师姐.md",
+      "path": "chapters/第六章_师兄师姐.md"
+    },
+    {
+      "number": 7,
+      "title": "太虚观想",
+      "filename": "第七章_太虚观想.md",
+      "path": "chapters/第七章_太虚观想.md"
+    },
+    {
+      "number": 8,
+      "title": "地下密室",
+      "filename": "第八章_地下密室.md",
+      "path": "chapters/第八章_地下密室.md"
+    },
+    {
+      "number": 9,
+      "title": "暗流涌动",
+      "filename": "第九章_暗流涌动.md",
+      "path": "chapters/第九章_暗流涌动.md"
+    },
+    {
+      "number": 10,
+      "title": "灵石矿的秘密",
+      "filename": "第十章_灵石矿的秘密.md",
+      "path": "chapters/第十章_灵石矿的秘密.md"
+    }
+  ],
+  "total": 10,
+  "last_updated": "/Users/liu/cat/小说"
+}

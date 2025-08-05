@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天道九问，我只想回地球 - 在线阅读</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .title {
+            font-size: 2.2em;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            font-size: 1em;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        /* 目录抽屉样式 */
+        .menu-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .menu-toggle button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .menu-icon {
+            font-size: 18px;
+        }
+
+        /* 抽屉容器 */
+        .menu-drawer {
+            position: fixed;
+            top: 0;
+            left: -350px;
+            width: 350px;
+            height: 100vh;
+            background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+            z-index: 1001;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .menu-drawer.open {
+            left: 0;
+        }
+
+        /* 遮罩层 */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .menu-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* 菜单头部 */
+        .menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-header h3 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* 菜单内容 */
+        .menu-content {
+            padding: 20px;
+        }
+
+        /* 章节树 */
+        .chapter-tree {
+            color: white;
+        }
+
+        .chapter-group {
+            margin-bottom: 15px;
+        }
+
+        .group-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        .group-title:hover {
+            background: linear-gradient(135deg, #5a6578 0%, #3d4758 100%);
+            transform: translateX(5px);
+        }
+
+        .group-icon {
+            font-size: 16px;
+        }
+
+        .toggle-icon {
+            margin-left: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .group-title.collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        /* 章节组内容 */
+        .group-content {
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            margin-top: 8px;
+        }
+
+        .group-content.collapsed {
+            max-height: 0;
+        }
+
+        /* 章节项 */
+        .chapter-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 3px 10px;
+            margin: 1px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .chapter-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(8px);
+            border-left-color: #667eea;
+        }
+
+        .chapter-item.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-left-color: #f093fb;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .chapter-item.active .chapter-title {
+            color: rgba(255, 255, 255, 1);
+        }
+
+        .chapter-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background: rgba(139, 69, 255, 0.8);
+            border-radius: 50%;
+            font-size: 9px;
+            font-weight: 600;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .chapter-item.active .chapter-number {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .chapter-btn {
+            padding: 8px 18px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #3498db;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+            color: #3498db;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .chapter-btn:hover {
+            background: #3498db;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .auto-scroll-controls {
+            margin: 20px 0;
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .auto-scroll-btn {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        .auto-scroll-btn:hover {
+            background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(17, 153, 142, 0.4);
+        }
+
+        .auto-scroll-btn.active {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        }
+
+        .auto-scroll-btn.active:hover {
+            background: linear-gradient(135deg, #ee5a24 0%, #ff6b6b 100%);
+        }
+
+        .speed-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .speed-controls label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .speed-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .speed-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        #speedDisplay {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .chapter-btn.active {
+            background: #3498db;
+            color: white;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .chapter-title {
+            font-size: 10px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.98);
+            line-height: 1.2;
+        }
+
+        .chapter-content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .chapter-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chapter-title {
+            font-size: 1.8em;
+            color: #34495e;
+            margin: 15px 0 15px 0;
+            padding-left: 12px;
+            border-left: 3px solid #3498db;
+        }
+
+        .content-text {
+            font-size: 0.95em;
+            line-height: 1.8;
+            text-indent: 2em;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .dialogue {
+            color: #e74c3c;
+            font-style: italic;
+            background: rgba(231, 76, 60, 0.08);
+            padding: 8px;
+            border-left: 2px solid #e74c3c;
+            margin: 12px 0;
+            text-indent: 0;
+        }
+
+        .description {
+            color: #8e44ad;
+            font-style: italic;
+            background: rgba(142, 68, 173, 0.08);
+            padding: 6px;
+            border-radius: 4px;
+        }
+
+        .refresh-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            transform: scale(1.1) rotate(180deg);
+            background: #2980b9;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .menu-toggle {
+                top: 15px;
+                left: 15px;
+            }
+            
+            .menu-toggle button {
+                padding: 10px 14px;
+                font-size: 14px;
+            }
+            
+            .menu-drawer {
+                width: 280px;
+                left: -280px;
+            }
+            
+            .menu-header {
+                padding: 15px;
+            }
+            
+            .menu-header h3 {
+                font-size: 14px;
+            }
+            
+            .menu-content {
+                padding: 15px;
+            }
+            
+            .group-title {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+            
+            .chapter-item {
+                padding: 8px 15px;
+            }
+            
+            .chapter-number {
+                width: 20px;
+                height: 20px;
+                font-size: 11px;
+            }
+            
+            .title {
+                font-size: 1.8em;
+            }
+            
+            .chapter-content {
+                padding: 15px;
+            }
+            
+            .content-text {
+                font-size: 0.9em;
+                line-height: 1.7;
+            }
+            
+            .chapter-title {
+                font-size: 1.5em;
+                margin: 10px 0 12px 0;
+            }
+            
+            .chapter-btn {
+                padding: 6px 14px;
+                font-size: 0.85em;
+            }
+
+            .auto-scroll-controls {
+                margin: 15px 0;
+                padding: 12px;
+            }
+
+            .auto-scroll-btn {
+                padding: 8px 16px;
+                font-size: 0.85em;
+            }
+
+            .speed-controls {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .speed-controls label {
+                font-size: 0.8em;
+                width: 100%;
+                margin-bottom: 5px;
+            }
+
+            .speed-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 1.1em;
+            }
+
+            #speedDisplay {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">天道九问，我只想回地球</h1>
+            <p class="subtitle">一个关于九魂归一与超越天道的修仙传奇</p>
+        </div>
+
+        <!-- 目录抽屉按钮 -->
+        <div class="menu-toggle">
+            <button id="menuToggle" onclick="toggleMenu()">
+                <span class="menu-icon">☰</span>
+                <span class="menu-text">目录</span>
+            </button>
+        </div>
+
+        <!-- 抽屉式目录 -->
+        <div id="menuDrawer" class="menu-drawer">
+            <div class="menu-header">
+                <h3>《天道九问，我只想回地球》</h3>
+                <button class="close-btn" onclick="toggleMenu()">×</button>
+            </div>
+            <div class="menu-content">
+                <div class="chapter-tree">
+                    <div class="chapter-group">
+                        <div class="group-title" onclick="toggleGroup('group1')">
+                            <span class="group-icon">📖</span>
+                            <span>第一卷：觉醒之路</span>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div id="group1" class="group-content expanded">
+                            <div class="chapter-item active" onclick="selectChapter(1)">
+                                <span class="chapter-number">01</span>
+                                <span class="chapter-title">觉醒</span>
+                            </div>
+                            <div class="chapter-item" onclick="selectChapter(2)">
+                                <span class="chapter-number">02</span>
+                                <span class="chapter-title">初试锋芒</span>
+                            </div>
+                            <div class="chapter-item" onclick="selectChapter(3)">
+                                <span class="chapter-number">03</span>
+                                <span class="chapter-title">青云宗</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chapter-group">
+                        <div class="group-title" onclick="toggleGroup('group2')">
+                            <span class="group-icon">⚔️</span>
+                            <span>第二卷：宗门风云</span>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div id="group2" class="group-content expanded">
+                            <div class="chapter-item" onclick="selectChapter(4)">
+                                <span class="chapter-number">04</span>
+                                <span class="chapter-title">宗门生活</span>
+                            </div>
+                            <div class="chapter-item" onclick="selectChapter(5)">
+                                <span class="chapter-number">05</span>
+                                <span class="chapter-title">宗主召见</span>
+                            </div>
+                            <div class="chapter-item" onclick="selectChapter(6)">
+                                <span class="chapter-number">06</span>
+                                <span class="chapter-title">师兄师姐</span>
+                            </div>
+                            <div class="chapter-item" onclick="selectChapter(7)">
+                                <span class="chapter-number">07</span>
+                                <span class="chapter-title">太虚观想</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chapter-group">
+                        <div class="group-title" onclick="toggleGroup('group3')">
+                            <span class="group-icon">🗡️</span>
+                            <span>第三卷：暗流涌动</span>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div id="group3" class="group-content expanded">
+                            <div class="chapter-item" onclick="selectChapter(8)">
+                                <span class="chapter-number">08</span>
+                                <span class="chapter-title">地下密室</span>
+                            </div>
+                            <div class="chapter-item" onclick="selectChapter(9)">
+                                <span class="chapter-number">09</span>
+                                <span class="chapter-title">暗流涌动</span>
+                            </div>
+                            <div class="chapter-item" onclick="selectChapter(10)">
+                                <span class="chapter-number">10</span>
+                                <span class="chapter-title">灵石矿的秘密</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- 遮罩层 -->
+        <div id="menuOverlay" class="menu-overlay" onclick="toggleMenu()"></div>
+        
+        <div class="auto-scroll-controls">
+            <button onclick="toggleAutoScroll()" class="auto-scroll-btn" id="autoScrollBtn">开始自动滚动</button>
+            <div class="speed-controls">
+                <label>滚动速度：</label>
+                <button onclick="adjustScrollSpeed(scrollSpeed - 0.5)" class="speed-btn">-</button>
+                <span id="speedDisplay">1.0x</span>
+                <button onclick="adjustScrollSpeed(scrollSpeed + 0.5)" class="speed-btn">+</button>
+            </div>
+        </div>
+
+        <div id="chapter1" class="chapter-content active">
+            <h2 class="chapter-title">第一章 觉醒</h2>
+            <div class="content-text">正在加载第一章内容...</div>
+        </div>
+
+        <div id="chapter2" class="chapter-content">
+            <h2 class="chapter-title">第二章 初试锋芒</h2>
+            <div class="content-text">正在加载第二章内容...</div>
+        </div>
+
+        <div id="chapter3" class="chapter-content">
+            <h2 class="chapter-title">第三章 青云宗</h2>
+            <div class="content-text">正在加载第三章内容...</div>
+        </div>
+
+        <div id="chapter4" class="chapter-content">
+            <h2 class="chapter-title">第四章 宗门生活</h2>
+            <div class="content-text">正在加载第四章内容...</div>
+        </div>
+
+        <div id="chapter5" class="chapter-content">
+            <h2 class="chapter-title">第五章 宗主召见</h2>
+            <div class="content-text">正在加载第五章内容...</div>
+        </div>
+
+        <div id="chapter6" class="chapter-content">
+            <h2 class="chapter-title">第六章 师兄师姐</h2>
+            <div class="content-text">正在加载第六章内容...</div>
+        </div>
+
+        <div id="chapter7" class="chapter-content">
+            <h2 class="chapter-title">第七章 太虚观想</h2>
+            <div class="content-text">正在加载第七章内容...</div>
+        </div>
+
+        <div id="chapter8" class="chapter-content">
+            <h2 class="chapter-title">第八章 地下密室</h2>
+            <div class="content-text">正在加载第八章内容...</div>
+        </div>
+
+        <div id="chapter9" class="chapter-content">
+            <h2 class="chapter-title">第九章 暗流涌动</h2>
+            <div class="content-text">正在加载第九章内容...</div>
+        </div>
+
+        <div id="chapter10" class="chapter-content">
+            <h2 class="chapter-title">第十章 灵石矿的秘密</h2>
+            <div class="content-text">正在加载第十章内容...</div>
+        </div>
+
+
+    </div>
+
+    <button class="refresh-btn" onclick="refreshContent()" title="刷新内容">🔄</button>
+
+    <script>
+        // 页面加载时自动加载第一章
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadChaptersList();
+            loadChapterContent(1);
+        });
+
+        // 全局变量存储章节信息
+        let chaptersData = [];
+        let maxChapter = 10;
+
+        // 动态获取章节列表
+        async function loadChaptersList() {
+            try {
+                // 优先尝试从chapters.json文件加载
+                const response = await fetch('chapters.json');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.chapters) {
+                        chaptersData = data.chapters;
+                        maxChapter = chaptersData.length;
+                        updateChapterMenu();
+                        console.log(`从chapters.json加载了${maxChapter}个章节`);
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.log('chapters.json不可用，尝试API方式');
+            }
+
+            try {
+                // 尝试从API获取章节列表
+                const response = await fetch('/api/chapters.php');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        chaptersData = data.chapters;
+                        maxChapter = chaptersData.length;
+                        updateChapterMenu();
+                        console.log(`从API加载了${maxChapter}个章节`);
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.log('API不可用，使用默认章节配置');
+            }
+
+            // 如果都不可用，使用默认配置
+            await scanChaptersDirectory();
+        }
+
+        // 扫描chapters目录
+        async function scanChaptersDirectory() {
+            const chapters = [];
+            
+            // 尝试加载已知的章节文件
+            for (let i = 1; i <= 50; i++) {
+                try {
+                    // 尝试不同的文件名格式
+                    const possibleNames = [
+                        `chapters/第${i}章_*.md`,
+                        `第${i}章_*.md`
+                    ];
+                    
+                    // 这里我们需要一个更智能的方式来检测文件
+                    // 暂时使用已知的章节
+                    if (i <= 10) {
+                        const knownChapters = {
+                            1: '觉醒',
+                            2: '初试锋芒', 
+                            3: '青云宗',
+                            4: '宗门生活',
+                            5: '宗主召见',
+                            6: '师兄师姐',
+                            7: '太虚观想',
+                            8: '地下密室',
+                            9: '暗流涌动',
+                            10: '灵石矿的秘密'
+                        };
+                        
+                        chapters.push({
+                            number: i,
+                            title: knownChapters[i],
+                            filename: `第${i}章_${knownChapters[i]}.md`,
+                            path: `chapters/第${i}章_${knownChapters[i]}.md`
+                        });
+                    }
+                } catch (error) {
+                    break;
+                }
+            }
+            
+            chaptersData = chapters;
+            maxChapter = chapters.length;
+        }
+
+        // 更新章节菜单
+        function updateChapterMenu() {
+            const menuContent = document.querySelector('.menu-content');
+            if (!menuContent) return;
+
+            // 清空现有菜单
+            menuContent.innerHTML = '';
+
+            // 按卷分组章节
+            const volumes = {};
+            chaptersData.forEach(chapter => {
+                const volumeNum = Math.ceil(chapter.number / 15); // 每卷15章
+                if (!volumes[volumeNum]) {
+                    volumes[volumeNum] = [];
+                }
+                volumes[volumeNum].push(chapter);
+            });
+
+            // 生成菜单HTML
+            Object.keys(volumes).forEach(volumeNum => {
+                const volumeChapters = volumes[volumeNum];
+                const volumeName = `第${['一', '二', '三', '四', '五', '六', '七', '八'][volumeNum - 1]}卷`;
+                
+                menuContent.innerHTML += `
+                    <div class="chapter-group-title" onclick="toggleGroup('volume${volumeNum}')">${volumeName}</div>
+                    <div class="chapter-group" id="volume${volumeNum}">
+                        ${volumeChapters.map(chapter => 
+                            `<div class="chapter-item" onclick="selectChapter(${chapter.number})">
+                                第${chapter.number}章 ${chapter.title}
+                            </div>`
+                        ).join('')}
+                    </div>
+                `;
+            });
+
+            // 更新章节容器
+            updateChapterContainers();
+        }
+
+        // 更新章节容器
+        function updateChapterContainers() {
+            const mainContent = document.querySelector('.main-content');
+            if (!mainContent) return;
+
+            // 清空现有容器（保留控制按钮）
+            const existingChapters = mainContent.querySelectorAll('.chapter-content');
+            existingChapters.forEach(chapter => chapter.remove());
+
+            // 添加新的章节容器
+            chaptersData.forEach(chapter => {
+                const chapterDiv = document.createElement('div');
+                chapterDiv.className = 'chapter-content';
+                chapterDiv.id = `chapter${chapter.number}`;
+                if (chapter.number === 1) {
+                    chapterDiv.classList.add('active');
+                }
+                
+                chapterDiv.innerHTML = `
+                    <h2>第${chapter.number}章 ${chapter.title}</h2>
+                    <div class="content-text">正在加载...</div>
+                `;
+                
+                mainContent.appendChild(chapterDiv);
+            });
+        }
+
+        async function loadChapterContent(chapterNum) {
+            const chapter = chaptersData.find(c => c.number === chapterNum);
+            if (!chapter) return;
+
+            try {
+                const response = await fetch(chapter.path);
+                if (response.ok) {
+                    const content = await response.text();
+                    const formattedContent = formatContent(content);
+                    document.querySelector(`#chapter${chapterNum} .content-text`).innerHTML = formattedContent;
+                } else {
+                    document.querySelector(`#chapter${chapterNum} .content-text`).innerHTML = 
+                        `<p style="color: #e74c3c;">无法加载 ${chapter.filename}，请确保文件存在于chapters目录下。</p>`;
+                }
+            } catch (error) {
+                document.querySelector(`#chapter${chapterNum} .content-text`).innerHTML = 
+                    `<p style="color: #e74c3c;">加载出错: ${error.message}</p>`;
+            }
+        }
+
+        // 抽屉菜单控制
+        function toggleMenu() {
+            const drawer = document.getElementById('menuDrawer');
+            const overlay = document.getElementById('menuOverlay');
+            const isOpen = drawer.classList.contains('open');
+            
+            if (isOpen) {
+                drawer.classList.remove('open');
+                overlay.classList.remove('show');
+            } else {
+                drawer.classList.add('open');
+                overlay.classList.add('show');
+            }
+        }
+
+        // 切换章节组展开/收起
+        function toggleGroup(groupId) {
+            const group = document.getElementById(groupId);
+            const title = group.previousElementSibling;
+            
+            if (group.classList.contains('collapsed')) {
+                group.classList.remove('collapsed');
+                title.classList.remove('collapsed');
+            } else {
+                group.classList.add('collapsed');
+                title.classList.add('collapsed');
+            }
+        }
+
+        // 选择章节
+        function selectChapter(chapterNum) {
+            showChapter(chapterNum);
+            toggleMenu(); // 选择后关闭菜单
+        }
+
+        function showChapter(chapterNum) {
+            // 隐藏所有章节
+            const chapters = document.querySelectorAll('.chapter-content');
+            chapters.forEach(chapter => {
+                chapter.classList.remove('active');
+            });
+
+            // 显示选中章节
+            document.getElementById(`chapter${chapterNum}`).classList.add('active');
+            currentChapter = chapterNum;
+
+            // 更新菜单中的活动状态
+            const allItems = document.querySelectorAll('.chapter-item');
+            allItems.forEach(item => item.classList.remove('active'));
+            
+            const activeItem = document.querySelector(`[onclick="selectChapter(${chapterNum})"]`);
+            if (activeItem) {
+                activeItem.classList.add('active');
+            }
+
+            // 加载章节内容
+            loadChapterContent(chapterNum);
+            
+            // 滚动到顶部
+            window.scrollTo(0, 0);
+        }
+
+        function formatContent(content) {
+            const lines = content.split('\n');
+            let formattedContent = '';
+            
+            for (let line of lines) {
+                const paragraph = line.trim();
+                if (paragraph === '') {
+                    continue;
+                } else if (paragraph.startsWith('#')) {
+                    // 标题
+                    const level = paragraph.match(/^#+/)[0].length;
+                    const text = paragraph.replace(/^#+\s*/, '');
+                    formattedContent += `<h${level + 1} class="chapter-title">${text}</h${level + 1}>`;
+                } else if (paragraph.startsWith('"') && paragraph.endsWith('"')) {
+                    // 对话
+                    formattedContent += `<p class="content-text dialogue">${paragraph}</p>`;
+                } else if (paragraph.includes('心中') || paragraph.includes('想到') || paragraph.includes('暗想')) {
+                    // 心理描写
+                    formattedContent += `<p class="content-text description">${paragraph}</p>`;
+                } else {
+                    // 普通段落
+                    formattedContent += `<p class="content-text">${paragraph}</p>`;
+                }
+            }
+            
+            return formattedContent;
+        }
+
+        function refreshContent() {
+            const activeChapter = document.querySelector('.chapter-content.active');
+            const chapterNum = activeChapter.id.replace('chapter', '');
+            loadChapterContent(parseInt(chapterNum));
+            
+            // 添加刷新动画
+            const btn = document.querySelector('.refresh-btn');
+            btn.style.transform = 'scale(1.1) rotate(360deg)';
+            setTimeout(() => {
+                btn.style.transform = 'scale(1) rotate(0deg)';
+            }, 300);
+        }
+
+        let autoRefreshInterval;
+        let autoScrollInterval;
+        let currentChapter = 1;
+        let isAutoScrolling = false;
+        let scrollSpeed = 1; // 滚动速度，像素/次
+        let scrollDelay = 50; // 滚动间隔，毫秒
+
+        // 自动刷新功能
+        function startAutoRefresh() {
+            autoRefreshInterval = setInterval(() => {
+                loadChapterContent(currentChapter);
+            }, 30000); // 30秒刷新一次
+        }
+
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+        }
+
+        // 自动滚动功能
+        function startAutoScroll() {
+            if (isAutoScrolling) return;
+            
+            isAutoScrolling = true;
+            autoScrollInterval = setInterval(() => {
+                // 获取当前滚动位置和最大滚动位置
+                const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+                
+                // 如果已经滚动到底部
+                if (currentScroll >= maxScroll - 10) {
+                    // 自动切换到下一章
+                    if (currentChapter < maxChapter) {
+                        stopAutoScroll();
+                        setTimeout(() => {
+                            currentChapter++;
+                            showChapter(currentChapter);
+                            // 切换章节后重新开始自动滚动
+                            setTimeout(() => {
+                                window.scrollTo(0, 0);
+                                startAutoScroll();
+                            }, 1000);
+                        }, 1000);
+                    } else {
+                        // 如果是最后一章，停止滚动
+                        stopAutoScroll();
+                    }
+                } else {
+                    // 继续向下滚动
+                    window.scrollBy(0, scrollSpeed);
+                }
+            }, scrollDelay);
+        }
+
+        function stopAutoScroll() {
+            isAutoScrolling = false;
+            if (autoScrollInterval) {
+                clearInterval(autoScrollInterval);
+            }
+        }
+
+        // 调整滚动速度
+        function adjustScrollSpeed(newSpeed) {
+            scrollSpeed = Math.max(0.5, Math.min(5, newSpeed));
+            updateSpeedDisplay();
+        }
+
+        // 更新速度显示
+        function updateSpeedDisplay() {
+            const speedDisplay = document.getElementById('speedDisplay');
+            if (speedDisplay) {
+                speedDisplay.textContent = scrollSpeed.toFixed(1) + 'x';
+            }
+        }
+
+        // 切换自动滚动
+        function toggleAutoScroll() {
+            const btn = document.getElementById('autoScrollBtn');
+            if (isAutoScrolling) {
+                stopAutoScroll();
+                btn.textContent = '开始自动滚动';
+                btn.classList.remove('active');
+            } else {
+                startAutoScroll();
+                btn.textContent = '停止自动滚动';
+                btn.classList.add('active');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            startAutoRefresh();
+            updateSpeedDisplay();
+        });
+
+        // 键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            switch(e.key) {
+                case '1':
+                    showChapter(1);
+                    break;
+                case '2':
+                    showChapter(2);
+                    break;
+                case '3':
+                    showChapter(3);
+                    break;
+                case '4':
+                    showChapter(4);
+                    break;
+                case '5':
+                    showChapter(5);
+                    break;
+                case '6':
+                    showChapter(6);
+                    break;
+                case '7':
+                    showChapter(7);
+                    break;
+                case '8':
+                    showChapter(8);
+                    break;
+                case '9':
+                    showChapter(9);
+                    break;
+                case '0':
+                    showChapter(10);
+                    break;
+                case 'ArrowLeft':
+                    if (currentChapter > 1) {
+                        showChapter(currentChapter - 1);
+                    }
+                    break;
+                case 'ArrowRight':
+                    if (currentChapter < maxChapter) {
+                        showChapter(currentChapter + 1);
+                    }
+                    break;
+                case ' ': // 空格键切换自动滚动
+                    e.preventDefault();
+                    toggleAutoScroll();
+                    break;
+                case '+':
+                case '=':
+                    e.preventDefault();
+                    adjustScrollSpeed(scrollSpeed + 0.5);
+                    break;
+                case '-':
+                    e.preventDefault();
+                    adjustScrollSpeed(scrollSpeed - 0.5);
+                    break;
+                case 'Escape': // ESC键停止自动滚动
+                    if (isAutoScrolling) {
+                        toggleAutoScroll();
+                    }
+                    break;
+            }
+        });
+    </script>
+</body>
+</html>
