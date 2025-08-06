@@ -48,12 +48,17 @@ def scan_chapters():
             elif chapter_str.isdigit():
                 chapter_num = int(chapter_str)
             else:
-                # 处理复杂的中文数字（如十一、十二等）
+                # 处理复杂的中文数字（如十一、十二、二十等）
                 if chapter_str.startswith('十'):
                     if len(chapter_str) == 1:
                         chapter_num = 10
                     else:
                         chapter_num = 10 + chinese_to_num.get(chapter_str[1], 0)
+                elif chapter_str.startswith('二十'):
+                    if len(chapter_str) == 2:
+                        chapter_num = 20
+                    else:
+                        chapter_num = 20 + chinese_to_num.get(chapter_str[2], 0)
                 else:
                     continue  # 跳过无法解析的章节号
             
